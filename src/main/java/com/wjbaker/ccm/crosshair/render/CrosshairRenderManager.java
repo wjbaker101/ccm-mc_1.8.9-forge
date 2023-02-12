@@ -67,9 +67,12 @@ public final class CrosshairRenderManager {
         if (isDotEnabled && this.crosshair.style.get() != CrosshairStyle.DEFAULT)
             this.renderManager.drawDot(x, y, 3.0F, this.crosshair.dotColour.get());
 
-        this.preTransformation(x, y);
+        int renderX = x + crosshair.offsetX.get();
+        int renderY = y + crosshair.offsetY.get();
+        
+        this.preTransformation(renderX, renderY);
 
-        style.draw(x, y, computedProperties);
+        style.draw(renderX, renderY, computedProperties);
 
         this.postTransformation();
 
