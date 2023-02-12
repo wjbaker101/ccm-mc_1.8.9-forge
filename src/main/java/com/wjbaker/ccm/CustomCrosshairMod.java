@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.Logger;
@@ -96,7 +97,13 @@ public final class CustomCrosshairMod {
     }
     
     private void checkVersionAsync() {
-        Executors.newSingleThreadExecutor().submit(this::checkVersion);
+        Executors.newSingleThreadExecutor().submit(new Callable<Boolean>() {
+        	@Override
+        	public Boolean call() throws Exception {
+        		checkVersion();
+        		return true;
+        	}
+		});
     }
 
     private void checkVersion() {
