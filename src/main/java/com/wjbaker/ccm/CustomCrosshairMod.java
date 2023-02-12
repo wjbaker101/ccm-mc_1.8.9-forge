@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -66,7 +67,7 @@ public final class CustomCrosshairMod {
         INSTANCE = this;
 
         this.loadConfig();
-        this.checkVersion();
+        this.checkVersionAsync();
 
         ClientRegistry.registerKeyBinding(EDIT_CROSSHAIR_KEY_BINDING);
     }
@@ -92,6 +93,10 @@ public final class CustomCrosshairMod {
                 this.error("Config Manager (Load)", "Unable to load or write config.");
             }
         }
+    }
+    
+    private void checkVersionAsync() {
+        Executors.newSingleThreadExecutor().submit(this::checkVersion);
     }
 
     private void checkVersion() {
