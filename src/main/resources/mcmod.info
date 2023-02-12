@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "custom-crosshair-mod",
+        "name": "Custom Crosshair Mod",
+        "description": "A dynamic and customisable crosshair.",
+        "version": "1.3.0-forge",
+        "mcversion": "${mcversion}",
+        "url": "https://www.curseforge.com/projects/242995/",
+        "updateUrl": "",
+        "authorList": ["Sparkless101"],
+        "credits": "",
+        "logoFile": "icon.png",
+        "screenshots": [],
+        "dependencies": []
+    }
+]
