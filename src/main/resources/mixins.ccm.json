@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "0.5.7",
+    "package": "com.wjbaker.ccm.mixins",
+    "refmap": "mixins.ccm.refmap.json",
+    "target": "@env(DEFAULT)",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
