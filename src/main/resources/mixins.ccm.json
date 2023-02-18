@@ -6,6 +6,7 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_8",
     "client": [
+        "EntityRenderMixin"
     ],
     "injectors": {
         "defaultRequire": 1
