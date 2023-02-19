@@ -11,6 +11,7 @@ import java.util.List;
 public final class CustomCrosshair {
 
     public final EnumProperty<CrosshairStyle> style;
+    public final BooleanProperty isKeepDebugEnabled;
     public final RGBAProperty colour;
     public final IntegerProperty width;
     public final IntegerProperty height;
@@ -54,6 +55,7 @@ public final class CustomCrosshair {
     public CustomCrosshair() {
         this.propertiesAsList = Lists.newArrayList(
             this.style = new EnumProperty<CrosshairStyle>("crosshair_style", CrosshairStyle.CROSS),
+            this.isKeepDebugEnabled = new BooleanProperty("crosshair_keep_debug_enabled", false),
             this.colour = new RGBAProperty("crosshair_colour", ModTheme.WHITE),
             this.width = new IntegerProperty("crosshair_width", 4),
             this.height = new IntegerProperty("crosshair_height", 4),

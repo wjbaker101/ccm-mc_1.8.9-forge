@@ -6,10 +6,7 @@ import com.wjbaker.ccm.crosshair.style.CrosshairStyle;
 import com.wjbaker.ccm.crosshair.style.CrosshairStyleFactory;
 import com.wjbaker.ccm.crosshair.style.ICrosshairStyle;
 import com.wjbaker.ccm.render.RenderManager;
-import com.wjbaker.ccm.type.RGBA;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
@@ -37,6 +34,7 @@ public final class CrosshairRenderManager {
     }
 
     public void draw(final int x, final int y) {
+        Minecraft mc = Minecraft.getMinecraft();
         ComputedProperties computedProperties = new ComputedProperties(this.crosshair);
 
         if (!computedProperties.isVisible())
@@ -44,17 +42,22 @@ public final class CrosshairRenderManager {
 
         RenderGameOverlayEvent eventParent = new RenderGameOverlayEvent(
             1.0F,
-            new ScaledResolution(Minecraft.getMinecraft()));
+            new ScaledResolution(mc));
 
         MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(
             eventParent,
             RenderGameOverlayEvent.ElementType.CROSSHAIRS));
 
-        ICrosshairStyle style = this.crosshairStyleFactory.from(this.crosshair.style.get(), this.crosshair);
+        boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
+        boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
+
+        CrosshairStyle calculatedStyle = showInF3 ? CrosshairStyle.DEBUG : this.crosshair.style.get();
+
+        ICrosshairStyle style = this.crosshairStyleFactory.from(calculatedStyle, this.crosshair);
         boolean isDotEnabled = this.crosshair.isDotEnabled.get();
         
-        if (Minecraft.getMinecraft().gameSettings.hideGUI) {
-        	ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        if (mc.gameSettings.hideGUI) {
+        	ScaledResolution scaledresolution = new ScaledResolution(mc);
             GlStateManager.clear(256);
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
@@ -64,7 +67,7 @@ public final class CrosshairRenderManager {
             GlStateManager.translate(0.0F, 0.0F, -2000.0F);
 		}
 
-        if (isDotEnabled && this.crosshair.style.get() != CrosshairStyle.DEFAULT)
+        if (isDotEnabled && calculatedStyle != CrosshairStyle.DEFAULT)
             this.renderManager.drawDot(x, y, 3.0F, this.crosshair.dotColour.get());
 
         int renderX = x + crosshair.offsetX.get();

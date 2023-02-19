@@ -1,6 +1,7 @@
 package com.wjbaker.ccm.mixins;
 
 import com.wjbaker.ccm.CustomCrosshairMod;
+import com.wjbaker.ccm.crosshair.CustomCrosshair;
 import com.wjbaker.ccm.crosshair.style.CrosshairStyle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EntityRenderer.class)
-public class EntityRenderMixin {
+public final class EntityRenderMixin {
 
     /**
      * @author Sparkless101
@@ -22,15 +23,18 @@ public class EntityRenderMixin {
     @Overwrite
     private void renderWorldDirections(final float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
+        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
 
-        if (mc.gameSettings.hideGUI || mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug())
-            return;
+        boolean isDebugStyle = crosshair.style.get() == CrosshairStyle.DEBUG;
+        boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
+        boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
 
-        boolean isDebugStyle = CustomCrosshairMod.INSTANCE.properties().getCrosshair().style.get() == CrosshairStyle.DEBUG;
+        if (isDebugStyle || showInF3) {
+            this.renderDebugCrosshair(mc, partialTicks);
+        }
+    }
 
-        if (!isDebugStyle)
-            return;
-
+    private void renderDebugCrosshair(final Minecraft mc, final float partialTicks) {
         Entity entity = mc.getRenderViewEntity();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
