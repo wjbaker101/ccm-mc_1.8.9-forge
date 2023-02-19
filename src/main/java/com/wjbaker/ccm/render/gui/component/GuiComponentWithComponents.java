@@ -20,6 +20,10 @@ public abstract class GuiComponentWithComponents extends GuiComponentTheme imple
 		});
     }
 
+	public void clearComponents() {
+		this.components.clear();
+	}
+
     @Override
     public void onMouseDown(final int mouseX, final int mouseY, final int button) {
         this.components
