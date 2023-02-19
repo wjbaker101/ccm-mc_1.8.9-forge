@@ -23,7 +23,7 @@ public class EntityRenderMixin {
     private void renderWorldDirections(final float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mc.gameSettings.hideGUI || mc.thePlayer.hasReducedDebug() || mc.thePlayer.hasReducedDebug())
+        if (mc.gameSettings.hideGUI || mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug())
             return;
 
         boolean isDebugStyle = CustomCrosshairMod.INSTANCE.properties().getCrosshair().style.get() == CrosshairStyle.DEBUG;
