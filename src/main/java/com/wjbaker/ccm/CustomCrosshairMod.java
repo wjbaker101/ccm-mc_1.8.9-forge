@@ -51,6 +51,8 @@ public final class CustomCrosshairMod {
     public static final String MC_VERSION = "1.8.9-forge";
     public static final String CURSEFORGE_PAGE = "https://www.curseforge.com/projects/242995/";
     public static final String MC_FORUMS_PAGE = "https://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2637819/";
+    public static final String PATREON_PAGE = "https://www.patreon.com/bePatron?u=66431720";
+    public static final String PAYPAL_PAGE = "https://www.paypal.com/cgi-bin/webscr?return=https://www.curseforge.com/projects/242995&cn=Add+special+instructions+to+the+addon+author()&business=sparkless101%40gmail.com&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&cancel_return=https://www.curseforge.com/projects/242995&lc=US&item_name=Custom+Crosshair+Mod+(from+curseforge.com)&cmd=_donations&rm=1&no_shipping=1&currency_code=USD";
 
     private static final KeyBinding EDIT_CROSSHAIR_KEY_BINDING = new KeyBinding("Open GUI", Keyboard.KEY_GRAVE, "Custom Crosshair Mod");
 

@@ -1,12 +1,5 @@
 package com.wjbaker.ccm.render.gui.screen;
 
-import net.minecraft.client.Minecraft;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
 import com.wjbaker.ccm.CustomCrosshairMod;
 import com.wjbaker.ccm.helper.ExternalHelper;
 import com.wjbaker.ccm.render.ModTheme;
@@ -14,6 +7,12 @@ import com.wjbaker.ccm.render.RenderManager;
 import com.wjbaker.ccm.render.gui.component.GuiComponent;
 import com.wjbaker.ccm.render.gui.component.components.ButtonGuiComponent;
 import com.wjbaker.ccm.render.gui.component.event.IOnClickEvent;
+import net.minecraft.client.Minecraft;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class GuiScreen extends GuiScreenAdapter {
 
@@ -24,6 +23,8 @@ public abstract class GuiScreen extends GuiScreenAdapter {
     protected final int headerHeight;
 
     private final ButtonGuiComponent newVersionButton;
+    private final ButtonGuiComponent patreonButton;
+    private final ButtonGuiComponent paypalButton;
 
     public GuiScreen(final String title) {
         this(title, null);
@@ -50,6 +51,30 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 			        new ExternalHelper().openInBrowser(CustomCrosshairMod.CURSEFORGE_PAGE);
 			}
 		});
+
+        this.patreonButton = new ButtonGuiComponent(this, -1, -1, 125, 25, "Support via Patreon!");
+        this.patreonButton.setBaseBackgroundColour(ModTheme.SECONDARY);
+        this.patreonButton.setHoverBackgroundColour(ModTheme.PRIMARY);
+        this.patreonButton.setBaseTextColour(ModTheme.WHITE);
+        this.patreonButton.setHoverTextColour(ModTheme.WHITE);
+        this.patreonButton.addEvent(IOnClickEvent.class, new IOnClickEvent() {
+            @Override
+            public void invoke() {
+                new ExternalHelper().openInBrowser(CustomCrosshairMod.PATREON_PAGE);
+            }
+        });
+
+        this.paypalButton = new ButtonGuiComponent(this, -1, -1, 125, 25, "Support via PayPal!");
+        this.paypalButton.setBaseBackgroundColour(ModTheme.SECONDARY);
+        this.paypalButton.setHoverBackgroundColour(ModTheme.PRIMARY);
+        this.paypalButton.setBaseTextColour(ModTheme.WHITE);
+        this.paypalButton.setHoverTextColour(ModTheme.WHITE);
+        this.paypalButton.addEvent(IOnClickEvent.class, new IOnClickEvent() {
+            @Override
+            public void invoke() {
+                new ExternalHelper().openInBrowser(CustomCrosshairMod.PAYPAL_PAGE);
+            }
+        });
     }
 
     @Override
@@ -61,9 +86,25 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 			}
 		});
 
+        int x = this.width;
+
+        x -= this.newVersionButton.getWidth() + 5;
+
         this.newVersionButton.setPosition(
-            this.width - this.newVersionButton.getWidth() - 5,
+            x,
             (this.headerHeight / 2) - (this.newVersionButton.getHeight() / 2));
+
+        x -= this.patreonButton.getWidth() + 5;
+
+        this.patreonButton.setPosition(
+            x,
+            (this.headerHeight / 2) - (this.patreonButton.getHeight() / 2));
+
+        x -= this.paypalButton.getWidth() + 5;
+
+        this.paypalButton.setPosition(
+            x,
+            (this.headerHeight / 2) - (this.paypalButton.getHeight() / 2));
     }
 
     @Override
@@ -98,6 +139,9 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 
         if (!CustomCrosshairMod.INSTANCE.properties().isLatestVersion().get())
             this.newVersionButton.draw();
+
+        this.patreonButton.draw();
+        this.paypalButton.draw();
     }
 
     @Override
@@ -118,6 +162,8 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 			});
 
         this.newVersionButton.onMouseDown(mouseX, mouseY, button);
+        this.patreonButton.onMouseDown(mouseX, mouseY, button);
+        this.paypalButton.onMouseDown(mouseX, mouseY, button);
     }
 
     @Override
@@ -130,6 +176,8 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 		});
 
         this.newVersionButton.onMouseUp(mouseX, mouseY, button);
+        this.patreonButton.onMouseUp(mouseX, mouseY, button);
+        this.paypalButton.onMouseUp(mouseX, mouseY, button);
     }
 
     @Override
@@ -142,6 +190,8 @@ public abstract class GuiScreen extends GuiScreenAdapter {
 		});
 
         this.newVersionButton.onMouseMove(mouseX, mouseY);
+        this.patreonButton.onMouseMove(mouseX, mouseY);
+        this.paypalButton.onMouseMove(mouseX, mouseY);
     }
 
     @Override
