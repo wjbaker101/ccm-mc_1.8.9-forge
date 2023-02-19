@@ -1,6 +1,5 @@
 package com.wjbaker.ccm.render.gui.screen.screens.editCrosshair.components;
 
-import com.wjbaker.ccm.CustomCrosshairMod;
 import com.wjbaker.ccm.crosshair.CustomCrosshair;
 import com.wjbaker.ccm.render.gui.component.components.CheckBoxGuiComponent;
 import com.wjbaker.ccm.render.gui.component.components.ColourPickerGuiComponent;
@@ -15,11 +14,10 @@ public final class OutlineSettingsGuiPanel extends PanelGuiComponent {
         final int x,
         final int y,
         final int width,
-        final int height) {
+        final int height,
+        final CustomCrosshair crosshair) {
 
         super(parentGuiScreen, x, y, width, height);
-
-        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
 
         HeadingGuiComponent heading = new HeadingGuiComponent(this.parentGuiScreen, -1, -1, "Outline Settings");
 
@@ -27,7 +25,7 @@ public final class OutlineSettingsGuiPanel extends PanelGuiComponent {
             this.parentGuiScreen, -1, -1, "Enable Outline", crosshair.isOutlineEnabled.get());
         isOutlineEnabledCheckBox.bind(crosshair.isOutlineEnabled);
 
-        ColourPickerGuiComponent outlineColourColourPicker = new ColourPickerGuiComponent(this.parentGuiScreen, -1, -1, "Outline Colour");
+        ColourPickerGuiComponent outlineColourColourPicker = new ColourPickerGuiComponent(this.parentGuiScreen, -1, -1, "Outline Colour", crosshair);
         outlineColourColourPicker.bind(crosshair.outlineColour);
 
         this.addComponent(heading);

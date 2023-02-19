@@ -16,11 +16,10 @@ public final class GeneralSettingsGuiPanel extends PanelGuiComponent {
         final int x,
         final int y,
         final int width,
-        final int height) {
+        final int height,
+        final CustomCrosshair crosshair) {
 
         super(parentGuiScreen, x, y, width, height);
-
-        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
 
         HeadingGuiComponent heading = new HeadingGuiComponent(this.parentGuiScreen, -1, -1, "General Settings");
 

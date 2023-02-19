@@ -1,6 +1,6 @@
 package com.wjbaker.ccm.render.gui.screen.screens.editCrosshair;
 
-import com.wjbaker.ccm.CustomCrosshairMod;
+import com.wjbaker.ccm.crosshair.CustomCrosshair;
 import com.wjbaker.ccm.render.gui.component.components.ButtonGuiComponent;
 import com.wjbaker.ccm.render.gui.component.components.ScrollPanelGuiComponent;
 import com.wjbaker.ccm.render.gui.component.custom.CrosshairPreviewGuiComponent;
@@ -10,15 +10,17 @@ import com.wjbaker.ccm.render.gui.screen.screens.editCrosshair.components.*;
 
 public final class EditCrosshairGuiScreen extends GuiScreen {
 
+    private final CustomCrosshair crosshair;
     private final ScrollPanelGuiComponent mainPanel;
     private final CrosshairPreviewGuiComponent crosshairPreviewPanel;
     private final ButtonGuiComponent resetButton;
 
     private final int panelWidth;
 
-    public EditCrosshairGuiScreen() {
+    public EditCrosshairGuiScreen(final CustomCrosshair crosshair) {
         super("Edit Crosshair");
 
+        this.crosshair = crosshair;
         this.panelWidth = 300;
 
         this.mainPanel = new ScrollPanelGuiComponent(this, 0, this.headerHeight + 1, 1000, 1000);
@@ -28,27 +30,27 @@ public final class EditCrosshairGuiScreen extends GuiScreen {
         this.crosshairPreviewPanel = new CrosshairPreviewGuiComponent(
             this,
             -1, -1,
-            CustomCrosshairMod.INSTANCE.properties().getCrosshair());
+            this.crosshair);
 
         this.resetButton = new ButtonGuiComponent(this, -1, -1, 80, 15, "Reset Settings");
         this.resetButton.addEvent(IOnClickEvent.class, new IOnClickEvent() {
             @Override
             public void invoke() {
-                CustomCrosshairMod.INSTANCE.properties().getCrosshair().resetProperties();
+                crosshair.resetProperties();
                 buildComponents();
             }
         });
     }
 
     private void buildComponents() {
-        GeneralSettingsGuiPanel generalSettingsPanel = new GeneralSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        ShapeSettingsGuiPanel shapeSettingsPanel = new ShapeSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        VisibilitySettingsGuiPanel visibilitySettingsPanel = new VisibilitySettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        OutlineSettingsGuiPanel outlineSettingsPanel = new OutlineSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        DotSettingsGuiPanel dotSettingsPanel = new DotSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        DynamicSettingsGuiPanel dynamicSettingsPanel = new DynamicSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        HighlightSettingsGuiPanel highlightSettingsPanel = new HighlightSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
-        RainbowSettingsGuiPanel rainbowSettingsPanel = new RainbowSettingsGuiPanel(this, -1, -1, this.panelWidth, -1);
+        GeneralSettingsGuiPanel generalSettingsPanel = new GeneralSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        ShapeSettingsGuiPanel shapeSettingsPanel = new ShapeSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        VisibilitySettingsGuiPanel visibilitySettingsPanel = new VisibilitySettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        OutlineSettingsGuiPanel outlineSettingsPanel = new OutlineSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        DotSettingsGuiPanel dotSettingsPanel = new DotSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        DynamicSettingsGuiPanel dynamicSettingsPanel = new DynamicSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        HighlightSettingsGuiPanel highlightSettingsPanel = new HighlightSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
+        RainbowSettingsGuiPanel rainbowSettingsPanel = new RainbowSettingsGuiPanel(this, -1, -1, this.panelWidth, -1, this.crosshair);
 
         this.mainPanel.clearComponents();
         this.mainPanel.addComponent(generalSettingsPanel);

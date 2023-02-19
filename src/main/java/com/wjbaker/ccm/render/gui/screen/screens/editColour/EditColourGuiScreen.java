@@ -1,6 +1,7 @@
 package com.wjbaker.ccm.render.gui.screen.screens.editColour;
 
 import com.wjbaker.ccm.CustomCrosshairMod;
+import com.wjbaker.ccm.crosshair.CustomCrosshair;
 import com.wjbaker.ccm.crosshair.property.IntegerProperty;
 import com.wjbaker.ccm.crosshair.property.RGBAProperty;
 import com.wjbaker.ccm.render.ModTheme;
@@ -23,7 +24,7 @@ public final class EditColourGuiScreen extends GuiScreen {
     private final ScrollPanelGuiComponent mainPanel;
     private final CrosshairPreviewGuiComponent crosshairPreviewPanel;
 
-    public EditColourGuiScreen(final RGBAProperty colour) {
+    public EditColourGuiScreen(final RGBAProperty colour, final CustomCrosshair crosshair) {
         super("Edit Colour");
 
         this.panelWidth = 300;
@@ -83,7 +84,7 @@ public final class EditColourGuiScreen extends GuiScreen {
         doneButton.addEvent(IOnClickEvent.class, new IOnClickEvent() {
 			@Override
 			public void invoke() {
-			    Minecraft.getMinecraft().displayGuiScreen(new EditCrosshairGuiScreen());
+			    Minecraft.getMinecraft().displayGuiScreen(new EditCrosshairGuiScreen(crosshair));
 			}
 		});
 

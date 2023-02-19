@@ -1,31 +1,16 @@
 package com.wjbaker.ccm;
 
-import static org.apache.logging.log4j.LogManager.getLogger;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
-
 import com.wjbaker.ccm.config.ConfigManager;
 import com.wjbaker.ccm.config.GlobalProperties;
 import com.wjbaker.ccm.crosshair.property.ICrosshairProperty;
 import com.wjbaker.ccm.crosshair.render.CrosshairRenderManager;
 import com.wjbaker.ccm.helper.RequestHelper;
 import com.wjbaker.ccm.render.gui.screen.screens.editCrosshair.EditCrosshairGuiScreen;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,6 +24,18 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 @Mod(modid = "custom-crosshair-mod", clientSideOnly = true)
 @SideOnly(value = Side.CLIENT)
@@ -146,7 +143,7 @@ public final class CustomCrosshairMod {
     @SubscribeEvent
     public void onClientTickEvent(final TickEvent.ClientTickEvent event) {
         if (Minecraft.getMinecraft().currentScreen == null && EDIT_CROSSHAIR_KEY_BINDING.isPressed())
-            Minecraft.getMinecraft().displayGuiScreen(new EditCrosshairGuiScreen());
+            Minecraft.getMinecraft().displayGuiScreen(new EditCrosshairGuiScreen(this.properties().getCrosshair()));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
