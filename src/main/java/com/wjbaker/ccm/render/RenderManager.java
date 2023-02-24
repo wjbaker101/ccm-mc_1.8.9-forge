@@ -1,5 +1,9 @@
 package com.wjbaker.ccm.render;
 
+import com.wjbaker.ccm.crosshair.custom.CustomCrosshairDrawer;
+import com.wjbaker.ccm.render.type.GuiBounds;
+import com.wjbaker.ccm.render.type.IDrawInsideWindowCallback;
+import com.wjbaker.ccm.type.RGBA;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,10 +11,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
-
-import com.wjbaker.ccm.render.type.GuiBounds;
-import com.wjbaker.ccm.render.type.IDrawInsideWindowCallback;
-import com.wjbaker.ccm.type.RGBA;
 
 public final class RenderManager {
 
@@ -223,6 +223,30 @@ public final class RenderManager {
         tessellator.draw();
 
         this.postRender();
+    }
+
+    public void drawImage(
+        final int x, final int y,
+        final CustomCrosshairDrawer image,
+        final RGBA colour,
+        final boolean isCentered) {
+
+        float offsetX = isCentered ? image.getWidth() / 2.0F : 0;
+        float offsetY = isCentered ? image.getHeight() / 2.0F : 0;
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int imageX = 0; imageX < width; ++imageX) {
+            for (int imageY = 0; imageY < height; ++imageY) {
+                if (image.getAt(imageX, imageY) == 1) {
+                    float drawX = x + imageX - offsetX;
+                    float drawY = y + imageY - offsetY;
+
+                    this.drawFilledRectangle(drawX, drawY, drawX + 1, drawY + 1, colour);
+                }
+            }
+        }
     }
     
     public void drawDot(final float x, final float y, final float size, final RGBA colour) {

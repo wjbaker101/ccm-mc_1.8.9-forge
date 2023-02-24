@@ -1,6 +1,7 @@
 package com.wjbaker.ccm.config;
 
 import com.wjbaker.ccm.crosshair.CustomCrosshair;
+import com.wjbaker.ccm.crosshair.custom.CustomCrosshairDrawer;
 import com.wjbaker.ccm.crosshair.property.BooleanProperty;
 import com.wjbaker.ccm.crosshair.property.StringProperty;
 
@@ -12,6 +13,7 @@ public final class GlobalProperties {
     private final BooleanProperty isLatestVersion;
     private final BooleanProperty isNewVersionNotified;
     private final StringProperty newVersion;
+    private final CustomCrosshairDrawer customCrosshairDrawer;
 
     public GlobalProperties() {
         this.crosshair = new CustomCrosshair();
@@ -19,6 +21,7 @@ public final class GlobalProperties {
         this.isLatestVersion = new BooleanProperty("is_latest_version", true);
         this.isNewVersionNotified = new BooleanProperty("is_new_version_notified", false);
         this.newVersion = new StringProperty("new_version", null);
+        this.customCrosshairDrawer = new CustomCrosshairDrawer();
     }
 
     public CustomCrosshair getCrosshair() {
@@ -43,5 +46,9 @@ public final class GlobalProperties {
 
     public StringProperty getNewVersion() {
         return this.newVersion;
+    }
+
+    public CustomCrosshairDrawer getCustomCrosshairDrawer() {
+        return this.customCrosshairDrawer;
     }
 }

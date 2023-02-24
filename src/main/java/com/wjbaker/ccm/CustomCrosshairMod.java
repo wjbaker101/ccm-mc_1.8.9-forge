@@ -70,6 +70,8 @@ public final class CustomCrosshairMod {
         this.checkVersionAsync();
 
         ClientRegistry.registerKeyBinding(EDIT_CROSSHAIR_KEY_BINDING);
+
+        this.properties.getCustomCrosshairDrawer().loadImage();
     }
     
     @EventHandler
