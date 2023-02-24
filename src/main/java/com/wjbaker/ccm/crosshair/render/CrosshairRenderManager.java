@@ -19,7 +19,6 @@ import java.util.Set;
 
 public final class CrosshairRenderManager {
 
-    private final CustomCrosshair crosshair;
     private final RenderManager renderManager;
     private final CrosshairStyleFactory crosshairStyleFactory;
 
@@ -27,15 +26,14 @@ public final class CrosshairRenderManager {
         Items.ender_pearl
     );
 
-    public CrosshairRenderManager(final CustomCrosshair crosshair) {
-        this.crosshair = crosshair;
+    public CrosshairRenderManager() {
         this.renderManager = new RenderManager();
         this.crosshairStyleFactory = new CrosshairStyleFactory();
     }
 
-    public void draw(final int x, final int y) {
+    public void draw(final CustomCrosshair crosshair, final int x, final int y) {
         Minecraft mc = Minecraft.getMinecraft();
-        ComputedProperties computedProperties = new ComputedProperties(this.crosshair);
+        ComputedProperties computedProperties = new ComputedProperties(crosshair);
 
         if (!computedProperties.isVisible())
             return;
@@ -51,10 +49,10 @@ public final class CrosshairRenderManager {
         boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
         boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
 
-        CrosshairStyle calculatedStyle = showInF3 ? CrosshairStyle.DEBUG : this.crosshair.style.get();
+        CrosshairStyle calculatedStyle = showInF3 ? CrosshairStyle.DEBUG : crosshair.style.get();
 
-        ICrosshairStyle style = this.crosshairStyleFactory.from(calculatedStyle, this.crosshair);
-        boolean isDotEnabled = this.crosshair.isDotEnabled.get();
+        ICrosshairStyle style = this.crosshairStyleFactory.from(calculatedStyle, crosshair);
+        boolean isDotEnabled = crosshair.isDotEnabled.get();
         
         if (mc.gameSettings.hideGUI) {
         	ScaledResolution scaledresolution = new ScaledResolution(mc);
@@ -68,12 +66,12 @@ public final class CrosshairRenderManager {
 		}
 
         if (isDotEnabled && calculatedStyle != CrosshairStyle.DEFAULT)
-            this.renderManager.drawDot(x, y, 3.0F, this.crosshair.dotColour.get());
+            this.renderManager.drawDot(x, y, 3.0F, crosshair.dotColour.get());
 
         int renderX = x + crosshair.offsetX.get();
         int renderY = y + crosshair.offsetY.get();
         
-        this.preTransformation(renderX, renderY);
+        this.preTransformation(crosshair, renderX, renderY);
 
         style.draw(renderX, renderY, computedProperties);
 
@@ -84,9 +82,9 @@ public final class CrosshairRenderManager {
             RenderGameOverlayEvent.ElementType.CROSSHAIRS));
     }
 
-    private void preTransformation(final int x, final int y) {
-        int rotation = this.crosshair.rotation.get();
-        int scale = this.crosshair.scale.get();
+    private void preTransformation(final CustomCrosshair crosshair, final int x, final int y) {
+        int rotation = crosshair.rotation.get();
+        int scale = crosshair.scale.get();
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y, 0);

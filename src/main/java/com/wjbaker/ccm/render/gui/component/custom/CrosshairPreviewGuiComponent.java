@@ -11,6 +11,7 @@ import com.wjbaker.ccm.type.RGBA;
 public final class CrosshairPreviewGuiComponent extends GuiComponent {
 
     private final CrosshairRenderManager crosshairRenderManager;
+    private final CustomCrosshair crosshair;
 
     public CrosshairPreviewGuiComponent(
         final GuiScreen parentGuiScreen,
@@ -20,7 +21,8 @@ public final class CrosshairPreviewGuiComponent extends GuiComponent {
 
         super(parentGuiScreen, x, y, 150, 150);
 
-        this.crosshairRenderManager = new CrosshairRenderManager(crosshair);
+        this.crosshair = crosshair;
+        this.crosshairRenderManager = new CrosshairRenderManager();
     }
 
     @Override
@@ -51,7 +53,7 @@ public final class CrosshairPreviewGuiComponent extends GuiComponent {
             2.0F,
             ModTheme.PRIMARY);
 
-        this.crosshairRenderManager.draw(this.x + (this.width / 2), this.y + (this.height / 2));
+        this.crosshairRenderManager.draw(this.crosshair, this.x + (this.width / 2), this.y + (this.height / 2));
 
         if (!CustomCrosshairMod.INSTANCE.properties().getIsModEnabled().get())
             this.renderManager.drawSmallText(

@@ -62,7 +62,7 @@ public final class CustomCrosshairMod {
     public CustomCrosshairMod() {
         this.logger = getLogger(CustomCrosshairMod.class);
         this.properties = new GlobalProperties();
-        this.crosshairRenderManager = new CrosshairRenderManager(this.properties.getCrosshair());
+        this.crosshairRenderManager = new CrosshairRenderManager();
 
         INSTANCE = this;
 
@@ -170,7 +170,7 @@ public final class CustomCrosshairMod {
         int x = Math.round(width / 2.0F);
         int y = Math.round(height / 2.0F);
 
-        this.crosshairRenderManager.draw(x, y);
+        this.crosshairRenderManager.draw(this.properties().getCrosshair(), x, y);
     }
     
     @SubscribeEvent
