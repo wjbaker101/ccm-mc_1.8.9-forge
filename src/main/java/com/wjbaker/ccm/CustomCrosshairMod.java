@@ -16,14 +16,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
@@ -32,13 +29,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-@Mod(modid = "custom-crosshair-mod", clientSideOnly = true)
-@SideOnly(value = Side.CLIENT)
+@Mod(name = CustomCrosshairMod.TITLE, modid = "custom-crosshair-mod", version = CustomCrosshairMod.VERSION, clientSideOnly = true)
 public final class CustomCrosshairMod {
 
     public static CustomCrosshairMod INSTANCE;
@@ -73,11 +68,11 @@ public final class CustomCrosshairMod {
 
         this.properties.getCustomCrosshairDrawer().loadImage();
     }
-    
-    @EventHandler
-	public void postInit(FMLPostInitializationEvent e) {
-		MinecraftForge.EVENT_BUS.register(this);
-	}
+
+    @Mod.EventHandler
+    public void onModInitialize(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
     private void loadConfig() {
         List<ICrosshairProperty<?>> configProperties = this.properties.getCrosshair().propertiesAsList;
@@ -98,19 +93,11 @@ public final class CustomCrosshairMod {
     }
     
     private void checkVersionAsync() {
-        Executors.newSingleThreadExecutor().submit(new Callable<Boolean>() {
-        	@Override
-        	public Boolean call() throws Exception {
-        		checkVersion();
-        		return true;
-        	}
-		});
+        Executors.newSingleThreadExecutor().submit(this::checkVersion);
     }
 
     private void checkVersion() {
-    	BufferedReader reader = null;
-        try {
-        	reader = new RequestHelper().get("https://pastebin.com/raw/B2sL8QCh");
+        try (BufferedReader reader = new RequestHelper().get("https://pastebin.com/raw/B2sL8QCh")) {
             String currentLine;
 
             while ((currentLine = reader.readLine()) != null) {
@@ -128,17 +115,8 @@ public final class CustomCrosshairMod {
                     this.properties.getNewVersion().set(expectedModVersion);
                 }
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             this.error("Version Checker", "Unable to check the version.");
-        }
-        finally {
-        	if (reader != null) {
-				try {
-					reader.close();
-				}
-        		catch (Exception e) {}
-        	}
         }
     }
 
@@ -180,9 +158,9 @@ public final class CustomCrosshairMod {
     	if (this.properties.isLatestVersion().get() || this.properties.getIsNewVersionNotified().get() || this.properties.getNewVersion().get() == null)
     		return;
     	
-		String pre = "\u00A79" + "[Custom Crosshair Mod] " + "\u00A7r";
+		String pre = "§9" + "[Custom Crosshair Mod] " + "§r";
 		
-    	event.player.addChatMessage(new ChatComponentTranslation(pre + "New version available: " + this.properties.getNewVersion().get() + ".", new Object[0]));
+    	event.player.addChatMessage(new ChatComponentTranslation(pre + "New version available: " + this.properties.getNewVersion().get() + "."));
     	
     	this.properties.getIsNewVersionNotified().set(true);
     }
