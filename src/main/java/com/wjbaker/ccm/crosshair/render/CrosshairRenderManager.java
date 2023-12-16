@@ -50,20 +50,20 @@ public final class CrosshairRenderManager {
         boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
 
         CrosshairStyle calculatedStyle = showInF3 ? CrosshairStyle.DEBUG : crosshair.style.get();
+        if (calculatedStyle == CrosshairStyle.DEBUG)
+            return;
 
         ICrosshairStyle style = this.crosshairStyleFactory.from(calculatedStyle, crosshair);
         boolean isDotEnabled = crosshair.isDotEnabled.get();
         
-        if (mc.gameSettings.hideGUI) {
-        	ScaledResolution scaledresolution = new ScaledResolution(mc);
-            GlStateManager.clear(256);
-            GlStateManager.matrixMode(5889);
-            GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1000.0D, 3000.0D);
-            GlStateManager.matrixMode(5888);
-            GlStateManager.loadIdentity();
-            GlStateManager.translate(0.0F, 0.0F, -2000.0F);
-		}
+        ScaledResolution scaledresolution = new ScaledResolution(mc);
+        GlStateManager.clear(256);
+        GlStateManager.matrixMode(5889);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1000.0D, 3000.0D);
+        GlStateManager.matrixMode(5888);
+        GlStateManager.loadIdentity();
+        GlStateManager.translate(0.0F, 0.0F, -2000.0F);
 
         if (isDotEnabled && calculatedStyle != CrosshairStyle.DEFAULT)
             this.renderManager.drawDot(x, y, 3.0F, crosshair.dotColour.get());

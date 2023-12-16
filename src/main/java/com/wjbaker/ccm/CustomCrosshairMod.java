@@ -7,8 +7,6 @@ import com.wjbaker.ccm.crosshair.render.CrosshairRenderManager;
 import com.wjbaker.ccm.helper.RequestHelper;
 import com.wjbaker.ccm.render.gui.screen.screens.editCrosshair.EditCrosshairGuiScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -154,25 +152,6 @@ public final class CustomCrosshairMod {
     		return;
     	
     	event.setCanceled(this.properties.getIsModEnabled().get());
-    }
-
-    @SubscribeEvent
-    public void onRenderTickEvent(final TickEvent.RenderTickEvent event) {
-        if (!this.properties.getIsModEnabled().get()) {
-            return;
-        }
-
-        if (Minecraft.getMinecraft().currentScreen != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat))
-            return;
-
-        ScaledResolution resolution = new ScaledResolution(Minecraft.getMinecraft());
-        int width = resolution.getScaledWidth();
-        int height = resolution.getScaledHeight();
-
-        int x = Math.round(width / 2.0F);
-        int y = Math.round(height / 2.0F);
-
-        this.crosshairRenderManager.draw(this.properties().getCrosshair(), x, y);
     }
     
     @SubscribeEvent
