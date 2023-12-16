@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.5.0-forge'
+version = '1.5.1-forge'
 group = 'com.wjbaker.ccm'
 archivesBaseName = 'custom_crosshair_mod'
 
