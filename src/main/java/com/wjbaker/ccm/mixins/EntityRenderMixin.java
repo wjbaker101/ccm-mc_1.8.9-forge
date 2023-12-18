@@ -8,19 +8,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.settings.GameSettings;
+import org.spongepowered.asm.lib.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityRenderer.class)
 public final class EntityRenderMixin {
+
+    private static final CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
+
+    @Shadow
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     @Inject(
         at = @At(
@@ -37,8 +41,6 @@ public final class EntityRenderMixin {
         if (!CustomCrosshairMod.INSTANCE.properties().getIsModEnabled().get())
             return;
 
-        Minecraft mc = Minecraft.getMinecraft();
-
         if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))
             return;
 
@@ -49,43 +51,69 @@ public final class EntityRenderMixin {
         int x = Math.round(width / 2.0F);
         int y = Math.round(height / 2.0F);
 
-        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
-
         new CrosshairRenderManager().draw(crosshair, x, y);
 
-        boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
-        boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
-
-        if (showInF3 || crosshair.style.get() == CrosshairStyle.DEBUG)
-            manuallyRenderDebugCrosshair(partialTicks);
-    }
-
-    private void manuallyRenderDebugCrosshair(final float partialTicks) {
-        Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GL11.glLineWidth(1.0F);
-        GlStateManager.disableTexture2D();
-        GlStateManager.depthMask(false);
-        GlStateManager.pushMatrix();
-        GlStateManager.matrixMode(5888);
-        GlStateManager.loadIdentity();
-        this.orientCamera(partialTicks);
-        GlStateManager.translate(0.0F, entity.getEyeHeight(), 0.0F);
-        RenderGlobal.drawOutlinedBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.005D, 1.0E-4D, 1.0E-4D), 255, 0, 0, 255);
-        RenderGlobal.drawOutlinedBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0E-4D, 1.0E-4D, 0.005D), 0, 0, 255, 255);
-        RenderGlobal.drawOutlinedBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0E-4D, 0.0033D, 1.0E-4D), 0, 255, 0, 255);
-        GlStateManager.popMatrix();
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
+        if (crosshair.style.get() == CrosshairStyle.DEBUG)
+            this.renderWorldDirections(partialTicks);
     }
 
     @Shadow
-    private void orientCamera(float partialTicks) {}
+    @Final
+    private void renderWorldDirections(float partialTicks) {}
 
     @Inject(method = "renderWorldDirections", at = @At("HEAD"), cancellable = true)
-    private void renderWorldDirections(final float partialTicks, final CallbackInfo callbackInfo) {
-        callbackInfo.cancel();
+    private void onRenderWorldDirections(final float partialTicks, final CallbackInfo callbackInfo) {
+        boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
+        boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
+
+        if (crosshair.style.get() != CrosshairStyle.DEBUG && !showInF3)
+            callbackInfo.cancel();
+    }
+
+    @Redirect(
+        method = "renderWorldDirections",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/client/settings/GameSettings;showDebugInfo:B",
+            opcode = Opcodes.GETFIELD
+        )
+    )
+    private boolean forceDebugCrosshairToShow_showDebugInfo(final GameSettings originalValue) {
+        return true;
+    }
+
+    @Redirect(
+        method = "renderWorldDirections",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/client/settings/GameSettings;hideGUI:B",
+            opcode = Opcodes.GETFIELD
+        )
+    )
+    private boolean forceDebugCrosshairToShow_hideGUI(final GameSettings originalValue) {
+        return false;
+    }
+
+    @Redirect(
+        method = "renderWorldDirections",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;hasReducedDebug()B"
+        )
+    )
+    private boolean forceDebugCrosshairToShow_hasReducedDebug() {
+        return false;
+    }
+
+    @Redirect(
+        method = "renderWorldDirections",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/client/settings/GameSettings;reducedDebugInfo:B",
+            opcode = Opcodes.GETFIELD
+        )
+    )
+    private boolean forceDebugCrosshairToShow_reducedDebugInfo(final GameSettings originalValue) {
+        return false;
     }
 }
