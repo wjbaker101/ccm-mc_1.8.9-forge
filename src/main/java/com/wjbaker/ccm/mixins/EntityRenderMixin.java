@@ -74,7 +74,7 @@ public final class EntityRenderMixin {
         method = "renderWorldDirections",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/client/settings/GameSettings;showDebugInfo:B",
+            target = "Lnet/minecraft/client/settings/GameSettings;showDebugInfo:Z",
             opcode = Opcodes.GETFIELD
         )
     )
@@ -86,7 +86,7 @@ public final class EntityRenderMixin {
         method = "renderWorldDirections",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/client/settings/GameSettings;hideGUI:B",
+            target = "Lnet/minecraft/client/settings/GameSettings;hideGUI:Z",
             opcode = Opcodes.GETFIELD
         )
     )
@@ -98,7 +98,8 @@ public final class EntityRenderMixin {
         method = "renderWorldDirections",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/entity/EntityPlayerSP;hasReducedDebug()B"
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;hasReducedDebug()Z",
+            opcode = Opcodes.INVOKEVIRTUAL
         )
     )
     private boolean forceDebugCrosshairToShow_hasReducedDebug() {
@@ -109,7 +110,7 @@ public final class EntityRenderMixin {
         method = "renderWorldDirections",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/client/settings/GameSettings;reducedDebugInfo:B",
+            target = "Lnet/minecraft/client/settings/GameSettings;reducedDebugInfo:Z",
             opcode = Opcodes.GETFIELD
         )
     )
