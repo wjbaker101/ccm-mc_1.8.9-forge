@@ -21,11 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityRenderer.class)
 public final class EntityRenderMixin {
 
-    private static final CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
-
-    @Shadow
-    private final Minecraft mc = Minecraft.getMinecraft();
-
     @Inject(
         at = @At(
             value = "CONSTANT",
@@ -41,6 +36,8 @@ public final class EntityRenderMixin {
         if (!CustomCrosshairMod.INSTANCE.properties().getIsModEnabled().get())
             return;
 
+        Minecraft mc = Minecraft.getMinecraft();
+
         if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))
             return;
 
@@ -51,6 +48,8 @@ public final class EntityRenderMixin {
         int x = Math.round(width / 2.0F);
         int y = Math.round(height / 2.0F);
 
+        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
+
         new CrosshairRenderManager().draw(crosshair, x, y);
 
         if (crosshair.style.get() == CrosshairStyle.DEBUG)
@@ -58,11 +57,12 @@ public final class EntityRenderMixin {
     }
 
     @Shadow
-    @Final
     private void renderWorldDirections(float partialTicks) {}
 
     @Inject(method = "renderWorldDirections", at = @At("HEAD"), cancellable = true)
     private void onRenderWorldDirections(final float partialTicks, final CallbackInfo callbackInfo) {
+        Minecraft mc = Minecraft.getMinecraft();
+        CustomCrosshair crosshair = CustomCrosshairMod.INSTANCE.properties().getCrosshair();
         boolean isReducedDebug = mc.gameSettings.reducedDebugInfo || mc.thePlayer.hasReducedDebug();
         boolean showInF3 = mc.gameSettings.showDebugInfo && !isReducedDebug && crosshair.isKeepDebugEnabled.get();
 
